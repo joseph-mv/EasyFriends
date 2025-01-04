@@ -32,7 +32,7 @@ export const createUser = async (req: Request, res: Response) => {
     }
   };
 
-  export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
     try{
       const user = req.body;
       const existUser=await userModel.findOne({ email: user.email })
@@ -56,3 +56,51 @@ export const createUser = async (req: Request, res: Response) => {
     }
     
   };
+
+ export const filterUsers=async(req:Request,res:Response)=>{
+  console.log('fil')
+  const { term } = req.query;
+  console.log(term)
+try{
+  const users=await userModel.find({
+    $or: [
+           { firstName: { $regex: term, $options: "i" } },
+               { lastName: { $regex: term, $options: "i" } },
+               { email: { $regex: term, $options: "i" } },
+          ],
+  }).limit(5)
+
+  res.status(200).json(users);
+ 
+
+}catch(error){
+
+}
+
+ } 
+
+//  try {
+//   if (term ) {
+//     // If a search term is provided, search users by name or email
+//     const users = await userModel.find({
+//       $or: [
+//         { firstName: { $regex: term, $options: "i" } },
+//         { lastName: { $regex: term, $options: "i" } },
+//         { email: { $regex: term, $options: "i" } },
+//       ],
+//     }).select("firstName lastName email image hobbies friendsCount");
+
+//     return res.status(200).json(users);
+//   } else {
+//     // If no search term is provided, return 10 random users
+//     const users = await userModel.aggregate([{ $sample: { size: 10 } }])
+      
+// console.log(users)
+//     return res.status(200).json(users);
+//   }
+// } catch (error) {
+//   console.error("Error searching users:", error);
+//   res.status(500).json({ message: "Error searching users" });
+// }
+
+
