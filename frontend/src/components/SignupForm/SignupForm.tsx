@@ -112,7 +112,7 @@ const SignupForm = ({setIsLogin}:Props) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className=" min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6 sm:p-8">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">Sign Up</h2>
         
