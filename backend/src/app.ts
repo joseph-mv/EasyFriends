@@ -1,6 +1,6 @@
 import express, { Application,Request, Response,NextFunction } from 'express';
 import dotenv from 'dotenv';
-// import cors from 'cors';
+import cors from 'cors';
 import connectDB from './config/db';
 import { errorHandler } from './middleware/errorHandler';
 import logger from './utils/logger';
@@ -40,7 +40,7 @@ const allowedOrigins: string[] = [
 
 // Middleware
 app.use(express.json());
-// app.use(cors());
+app.use(cors());
 // app.use(helmet());
 app.use(logger);
 

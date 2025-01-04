@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { ChevronDown, X,Eye,EyeClosed } from 'lucide-react';
 import { Country, State } from "country-state-city";
 import { FormData, Props } from './type';
+import axios, { AxiosError } from 'axios';
+import { ErrorResponse } from 'react-router-dom';
 
 
 
 const SignupForm = ({setIsLogin}:Props) => {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -26,6 +29,7 @@ const SignupForm = ({setIsLogin}:Props) => {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [status,setStatus]=useState('')
 
  // Get the list of countries and states
  const countries = Country.getAllCountries();
@@ -61,16 +65,16 @@ const SignupForm = ({setIsLogin}:Props) => {
   const validateForm = () => {
     const newErrors: Partial<FormData> = {};
 
-    if (!formData.firstName) newErrors.firstName = 'First name is required';
-    if (!formData.lastName) newErrors.lastName = 'Last name is required';
-    if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) {
-      newErrors.dobDay = 'Complete date of birth is required';
-    }
-    if (!formData.gender) newErrors.gender = 'Gender is required';
-    if (!formData.country) newErrors.country = 'Country is required';
-    if (!formData.state) newErrors.state = 'State is required';
-    if (!formData.place) newErrors.place = 'Place is required';
-    if (formData.hobbies.length === 0) newErrors.hobbies = ['At least one hobby is required'];
+    // if (!formData.firstName) newErrors.firstName = 'First name is required';
+    // if (!formData.lastName) newErrors.lastName = 'Last name is required';
+    // if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) {
+    //   newErrors.dobDay = 'Complete date of birth is required';
+    // }
+    // if (!formData.gender) newErrors.gender = 'Gender is required';
+    // if (!formData.country) newErrors.country = 'Country is required';
+    // if (!formData.state) newErrors.state = 'State is required';
+    // if (!formData.place) newErrors.place = 'Place is required';
+    // if (formData.hobbies.length === 0) newErrors.hobbies = ['At least one hobby is required'];
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.password) newErrors.password = 'Password is required';
     if (formData.password !== formData.confirmPassword) {
@@ -81,11 +85,30 @@ const SignupForm = ({setIsLogin}:Props) => {
     return Object.keys(newErrors).length === 0; //no error
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+ 
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Form submitted:', formData);
+      //  API request
+    try {
+      // console.log(formData)
+
+      const response = await axios.post(BASE_URL + '/signup', formData);
+
+      setStatus(response.data.msg || response.data.error);
+     if(response.data.status) {
+      setIsLogin(true)
+     }
+    } catch (error) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      if (axiosError.response) {
+        setStatus(axiosError.response.data.message);
+      } else {
+        setStatus("An unexpected error occurred");
+      }
     }
+    }
+   
   };
 
   return (
@@ -344,6 +367,8 @@ const SignupForm = ({setIsLogin}:Props) => {
               Sign Up
             </button>
           </div>
+          {status && <p className="text-center text-red-500 mb-4">{status}</p>}
+    
         </form>
       </div>
       <p className="text-center text-gray-600 mt-6">
