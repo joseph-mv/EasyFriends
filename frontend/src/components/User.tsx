@@ -2,13 +2,13 @@ import { User as UserDetails } from "./UsersList";
 import { Plus } from "lucide-react";
 import { axiosInstance } from "../api/axiosInstance";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { cancelRequest, sendRequest } from "../redux/reducers/userReducer";
+import { acceptRequest, cancelRequest, declineRequest, sendRequest } from "../redux/reducers/userReducer";
 import { getRelationshipStatus } from "../utils";
 
 const User = ({ user }: { user: UserDetails }) => {
   const token = localStorage.getItem("token");
-  const sender = useAppSelector((store) => store.user.user);
-  const senderId = sender?._id;
+  const loggedUser = useAppSelector((store) => store.user.user);
+  const loggedUserId = loggedUser?._id;
   const dispatch = useAppDispatch();
 
   const sendFriendRequest = async () => {
@@ -16,7 +16,7 @@ const User = ({ user }: { user: UserDetails }) => {
       const response = await axiosInstance.post(
         "/friend_request",
         {
-          senderId: senderId,
+          senderId: loggedUserId,
           receiverId: user._id,
         },
         {
@@ -39,7 +39,7 @@ const User = ({ user }: { user: UserDetails }) => {
       const response = await axiosInstance.post(
         "/cancel_request",
         {
-          senderId: senderId,
+          senderId: loggedUserId,
           receiverId: user._id,
         },
         {
@@ -57,11 +57,62 @@ const User = ({ user }: { user: UserDetails }) => {
       alert(error.response?.data?.message || "Failed to cancel friend request");
     }
   };
+  const declineFriendRequest = async () => {
+    try {
+      const response = await axiosInstance.post(
+        "/decline_request",
+        {
+          receiverId: loggedUserId,
+          senderId: user._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+          },
+        }
+      );
+      console.log(response)
+      if (response.data.status) {
+
+        dispatch(declineRequest(user._id));
+      }
+      alert(response.data.message);
+    } catch (error: any) {
+      console.error("Error sending friend request:", error);
+      alert(error.response?.data?.message || "Failed to cancel friend request");
+    }
+  };
+  const acceptFriendRequest = async () => {
+    try {
+      const response = await axiosInstance.post(
+        "/accept_request",
+        {
+          receiverId: loggedUserId,
+          senderId: user._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+          },
+        }
+      );
+      console.log(response)
+      if (response.data.status) {
+
+        dispatch(declineRequest(user._id));
+        dispatch(acceptRequest(user._id));
+      }
+      alert(response.data.message);
+    } catch (error: any) {
+      console.error("Error sending friend request:", error);
+      alert(error.response?.data?.message || "Failed to cancel friend request");
+    }
+  };
 
   const relation = getRelationshipStatus(user._id, {
-    friends: sender?.friends,
-    getRequests: sender?.getRequests,
-    sendRequests: sender?.sendRequests,
+    friends: loggedUser?.friends,
+    getRequests: loggedUser?.getRequests,
+    sendRequests: loggedUser?.sendRequests,
   });
 
   return (
@@ -109,13 +160,27 @@ const User = ({ user }: { user: UserDetails }) => {
     Cancel Request
   </button>
 ) : (
-  <button
-    // onClick={acceptRequest}
-    className="absolute right-4 px-4   py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-300"
+  <div className="absolute right-4 space-x-2" >
+   <button
+    onClick={acceptFriendRequest}
+    className=" px-4   py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-300"
     aria-label="Accept Friend Request"
   >
     Accept
   </button>
+
+  <button
+    onClick={declineFriendRequest}
+    className="px-4  py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-300"
+    aria-label="Accept Friend Request"
+  >
+    Decline
+  </button>
+  </div>
+ 
+
+ 
+  
 )}
 
     </div>

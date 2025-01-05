@@ -49,18 +49,28 @@ const userSlice = createSlice({
     },
     cancelRequest:(state,action:PayloadAction<string>)=>{
       const indexToDelete = state.user?.sendRequests.indexOf(action.payload);
-console.log('deleteInd' ,indexToDelete)
       if ( indexToDelete as number > -1) {
         state.user?.sendRequests.splice(indexToDelete, 1); // Remove 1 element at the found index
       }
     
     },
+    declineRequest:(state,action:PayloadAction<string>)=>{
+      const indexToDelete = state.user?.getRequests.indexOf(action.payload);
+      console.log(indexToDelete)
+      if ( indexToDelete as number > -1) {
+        state.user?.getRequests.splice(indexToDelete, 1); // Remove 1 element at the found index
+      }
+    
+    },
+    acceptRequest:(state,action:PayloadAction<string>)=>{
+      state.user?.friends.push(action.payload);
+    }
     
   },
 });
 
 // Export actions
-export const { setUser, clearUser,sendRequest,cancelRequest} = userSlice.actions;
+export const { setUser, clearUser,sendRequest,cancelRequest,declineRequest,acceptRequest} = userSlice.actions;
 
 // Export reducer
 export default userSlice.reducer;

@@ -151,3 +151,80 @@ export const cancelRequest = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const declineRequest = async (req: Request, res: Response) => {
+  const { senderId, receiverId } = req.body;
+  console.log("sender receiver", senderId, receiverId);
+
+  try {
+    const result1 = await userModel.updateOne(
+      { _id: senderId },
+      { $pull: { sendRequests: receiverId } }
+    );
+    console.log(res);
+
+    const result2 = await userModel.updateOne(
+      { _id: receiverId },
+      { $pull: { getRequests: senderId } }
+    );
+
+    if (result1.modifiedCount > 0) {
+      res.status(200).json({
+        message: `Friend with ID removed successfully.`,
+        status: true,
+      });
+    } else {
+      console.log(`No matching friend found to remove.`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const acceptRequest = async (req: Request, res: Response) => {
+  const { senderId, receiverId } = req.body;
+  try {
+    const result1 = await userModel.updateOne(
+      { _id: senderId },
+      { $pull: { sendRequests: receiverId } },
+
+    );
+
+    const result2 = await userModel.updateOne(
+      { _id: receiverId },
+      { $pull: { getRequests: senderId } },
+    );
+
+    const sender = await userModel.findById(senderId);
+    const receiver = await userModel.findById(receiverId);
+
+    // Check if both users exist
+    if (!sender || !receiver) {
+      res.status(404).json({ message: "Sender or Receiver not found" });
+      return;
+    }
+
+    // Push senderId to receiver's getRequests if  not in the array
+    if (!receiver.friends.includes(senderId)) {
+      receiver.friends.push(senderId);
+      await receiver.save(); // Save the updated receiver document
+    }
+
+    // Push receiverId to sender's sendRequests if not in the array
+    if (!sender.friends.includes(receiverId)) {
+      sender.friends.push(receiverId);
+      await sender.save(); // Save the updated sender document
+    }
+
+    if (result1.modifiedCount > 0) {
+      res.status(200).json({
+        message: `Friend request accept successfully.`,
+        status: true,
+      });
+    } 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
