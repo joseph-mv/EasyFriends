@@ -50,7 +50,7 @@ const userSlice = createSlice({
     cancelRequest:(state,action:PayloadAction<string>)=>{
       const indexToDelete = state.user?.sendRequests.indexOf(action.payload);
       if ( indexToDelete as number > -1) {
-        state.user?.sendRequests.splice(indexToDelete, 1); // Remove 1 element at the found index
+        state.user?.sendRequests.splice(indexToDelete as number, 1); // Remove 1 element at the found index
       }
     
     },
@@ -58,7 +58,7 @@ const userSlice = createSlice({
       const indexToDelete = state.user?.getRequests.indexOf(action.payload);
       console.log(indexToDelete)
       if ( indexToDelete as number > -1) {
-        state.user?.getRequests.splice(indexToDelete, 1); // Remove 1 element at the found index
+        state.user?.getRequests.splice(indexToDelete as number, 1); // Remove 1 element at the found index
       }
     
     },
@@ -69,7 +69,7 @@ const userSlice = createSlice({
       const indexToDelete = state.user?.friends.indexOf(action.payload);
       console.log(indexToDelete)
       if ( indexToDelete as number > -1) {
-        state.user?.friends.splice(indexToDelete, 1); // Remove 1 element at the found index
+        state.user?.friends.splice(indexToDelete as number, 1); // Remove 1 element at the found index
       }
     }
     
