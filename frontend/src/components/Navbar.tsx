@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { Users, Bell, MessageCircle, UserCircle } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -21,7 +21,7 @@ const Navbar = () => {
       if (response.data) {
         dispatch(setUser(response.data));
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending friend request:", error);
       // alert(error.message);
       

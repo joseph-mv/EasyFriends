@@ -57,7 +57,9 @@ const SignupForm = ({ setIsLogin }: Props) => {
       } catch (error) {
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response) {
-          setStatus(axiosError.response.data.message);
+          setStatus(
+            "Invalid email or password"
+          );
         } else {
           setStatus("An unexpected error occurred");
         }

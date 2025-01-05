@@ -19,13 +19,14 @@ console.log(user)
     <div className="relative max-w-7xl flex mt-4 mx-auto bg-white shadow-md rounded-lg overflow-hidden">
       {/* User Image */}
       <div className="relative">
-        { user.image?
+        {/* { user.image?
           <img
             src={user.image}
             alt={user.firstName}
             className="w-full h-48 object-cover"
-          />:<User2Icon className="h-44 w-44 text-gray-500" />
-        }
+          />: */}
+          <User2Icon className="h-44 w-44 text-gray-500" />
+        {/* } */}
         
       </div>
 
@@ -59,7 +60,7 @@ console.log(user)
             Number of Friends:
           </h3>
           <p className="text-indigo-600 text-xl font-bold">
-            {user?.numberOfFriends}
+            {/* {user?.numberOfFriends} */}
           </p>
         </div>
       </div>

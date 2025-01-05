@@ -129,9 +129,9 @@ const User = ({ user }: { user: UserDetails }) => {
        
       }
       alert(response.data.message);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending friend request:", error);
-      alert(error.response?.data?.message || "Failed to cancel friend request");
+      // alert(error.response?.data?.message || "Failed to cancel friend request");
     }
   }
 
@@ -147,7 +147,7 @@ const User = ({ user }: { user: UserDetails }) => {
       className="relative bg-gray-500 flex items-center p-4 border rounded shadow-sm  h-16 overflow-hidden"
     >
       <img
-        src={user.image || "/placeholder-user.png"}
+        src={ "/placeholder-user.png"}
         alt={user.firstName}
         className="w-12 h-12 rounded-full mr-4"
       />

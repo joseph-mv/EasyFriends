@@ -34,9 +34,9 @@ const Recommended = () => {
            
           }
           alert(response.data.message);
-        } catch (error: any) {
+        } catch (error) {
           console.error("Error get recommendations:", error);
-          alert(error.response?.data?.message || "Failed to get recommendations");
+        //   alert(error.response?.data?.message || "Failed to get recommendations");
         }}
 
         useEffect(() => {
@@ -50,9 +50,9 @@ const Recommended = () => {
       <ul className="mt-4 space-y-2 p-2">
        
         {recommended.map((user) => (
-          <li key={user._id}>
+        
             <User user={user} />
-          </li>
+          
         ))}
       </ul>
     </div>

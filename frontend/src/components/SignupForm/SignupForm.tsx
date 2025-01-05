@@ -4,6 +4,7 @@ import { Country, State } from "country-state-city";
 import { FormData, Props } from './type';
 import axios, { AxiosError } from 'axios';
 import { ErrorResponse } from 'react-router-dom';
+// import { ErrorResponse } from 'react-router-dom';
 
 
 
@@ -65,16 +66,16 @@ const SignupForm = ({setIsLogin}:Props) => {
   const validateForm = () => {
     const newErrors: Partial<FormData> = {};
 
-    // if (!formData.firstName) newErrors.firstName = 'First name is required';
-    // if (!formData.lastName) newErrors.lastName = 'Last name is required';
-    // if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) {
-    //   newErrors.dobDay = 'Complete date of birth is required';
-    // }
-    // if (!formData.gender) newErrors.gender = 'Gender is required';
-    // if (!formData.country) newErrors.country = 'Country is required';
-    // if (!formData.state) newErrors.state = 'State is required';
-    // if (!formData.place) newErrors.place = 'Place is required';
-    // if (formData.hobbies.length === 0) newErrors.hobbies = ['At least one hobby is required'];
+    if (!formData.firstName) newErrors.firstName = 'First name is required';
+    if (!formData.lastName) newErrors.lastName = 'Last name is required';
+    if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) {
+      newErrors.dobDay = 'Complete date of birth is required';
+    }
+    if (!formData.gender) newErrors.gender = 'Gender is required';
+    if (!formData.country) newErrors.country = 'Country is required';
+    if (!formData.state) newErrors.state = 'State is required';
+    if (!formData.place) newErrors.place = 'Place is required';
+    if (formData.hobbies.length === 0) newErrors.hobbies = ['At least one hobby is required'];
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.password) newErrors.password = 'Password is required';
     if (formData.password !== formData.confirmPassword) {
@@ -100,8 +101,9 @@ const SignupForm = ({setIsLogin}:Props) => {
       setIsLogin(true)
      }
     } catch (error) {
-      const axiosError = error as AxiosError<ErrorResponse>;
+      const axiosError = error as AxiosError<ErrorResponse & {message:string}>;
       if (axiosError.response) {
+
         setStatus(axiosError.response.data.message);
       } else {
         setStatus("An unexpected error occurred");
