@@ -58,7 +58,6 @@ export const login = async (req: Request, res: Response) => {
   };
 
  export const filterUsers=async(req:Request,res:Response)=>{
-  console.log('fil')
   const { term } = req.query;
   console.log(term)
 try{
@@ -79,28 +78,13 @@ try{
 
  } 
 
-//  try {
-//   if (term ) {
-//     // If a search term is provided, search users by name or email
-//     const users = await userModel.find({
-//       $or: [
-//         { firstName: { $regex: term, $options: "i" } },
-//         { lastName: { $regex: term, $options: "i" } },
-//         { email: { $regex: term, $options: "i" } },
-//       ],
-//     }).select("firstName lastName email image hobbies friendsCount");
+export const friendRequest=async (req:Request,res:Response)=>{
+  const{senderId,receiverId}=req.body
+  // Check if a friend request already exists
+  const sender = await userModel.findById(senderId);
+  const receiver = await userModel.findById(receiverId);
 
-//     return res.status(200).json(users);
-//   } else {
-//     // If no search term is provided, return 10 random users
-//     const users = await userModel.aggregate([{ $sample: { size: 10 } }])
-      
-// console.log(users)
-//     return res.status(200).json(users);
-//   }
-// } catch (error) {
-//   console.error("Error searching users:", error);
-//   res.status(500).json({ message: "Error searching users" });
-// }
+  console.log(senderId,receiverId)
+}
 
 
