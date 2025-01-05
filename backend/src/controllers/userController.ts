@@ -259,4 +259,49 @@ export const unFriend = async (req: Request, res: Response) => {
   }
 };
 
+export const recommendedFriends=async (req: Request,res:Response)=>{
+  const{userId}=req.body
+  console.log('recommendedFriends',userId);
+  try{
+    const user = await userModel.findById(userId);
+    if (!user) {
+       res.status(404).json({ message: "User not found" });
+    }else{
+      const userFriends = user?.friends; // Assuming `friends` is an array of friend IDs
+      if (!userFriends || userFriends.length === 0) {
+        res.status(200).json({ mutualFriends: [] });
+      }else{
+        const mutualFriendsSet = new Set<string>(); // To avoid duplicates
+  
+      // Find mutual friends
+      if(userFriends){
+        for (const friendId of userFriends) {
+          const friend = await userModel.findById(friendId).select("friends");
+    
+          if (friend && friend.friends) {
+            friend.friends.forEach((friendOfFriendId: string) => {
+              // Add to mutual friends if the person is not the user and is not already their friend
+              if (friendOfFriendId !== userId && !userFriends.includes(friendOfFriendId)) {
+                mutualFriendsSet.add(friendOfFriendId);
+              }
+            });
+          }
+        }
+      }
+      // Convert the Set to an Array
+      const mutualFriends = Array.from(mutualFriendsSet);
+  
+      res.status(200).json({ mutualFriends: mutualFriends });
+    }
+
+      }
+      
+   
+
+  }catch(error){
+    console.error("Error fetching recommended friends:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 
