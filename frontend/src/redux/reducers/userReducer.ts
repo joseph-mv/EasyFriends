@@ -37,6 +37,7 @@ const userSlice = createSlice({
   reducers: {
     // Set the user object
     setUser: (state, action: PayloadAction<User>) => {
+      console.log('set user',state.user)
       state.user = action.payload;
     },
     // Clear user data on logout

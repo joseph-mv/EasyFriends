@@ -8,7 +8,8 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction): voi
   
 
 const decoded= jwt.verify(token as string, process.env.JWT_SECRET as string)
-console.log('authenticated')
+console.log('authenticated',decoded)
+
 next()
 
 }
