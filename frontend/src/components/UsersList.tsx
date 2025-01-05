@@ -2,13 +2,14 @@ import  { useEffect, useState } from "react";
 import axios from "axios";
 import { FormData } from "./SignupForm/type";
 import User from "./User";
+import  { useAppSelector } from "../redux/store";
 
 export interface User extends FormData {_id:string}
 
 const UsersList = () => {
-    
+    const my_id=useAppSelector(store=>store.user.user?._id)
   const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const [users, setUsers] = useState<User|[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
@@ -23,11 +24,9 @@ const UsersList = () => {
     fetchUsers();
   }, [searchTerm]);
 
-//   const filteredUsers = users.filter((user) =>
-//     user.name.toLowerCase().includes(searchTerm.toLowerCase())
-//   );
 
-console.log(users)
+
+
   return (
     <div className="p-4">
       <h2 className="text-lg font-bold">Users</h2>
@@ -40,7 +39,7 @@ console.log(users)
       />
       <ul className="mt-4 space-y-2 p-2">
        
-        {users.map((user:User) => (
+        {users.map((user:User) => (user._id!==my_id &&
           <User user={user}/>
         ))}
       </ul>

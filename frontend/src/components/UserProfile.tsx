@@ -1,19 +1,21 @@
 import { User2Icon } from "lucide-react";
 // import { FormData } from "./SignupForm/type";
 import { useState } from "react";
-import { useAppSelector } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { clearUser } from "../redux/reducers/userReducer";
 
 const UserProfile = () => {
 const [isAuthenticated,setIsAuthenticated]=useState(false)
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
 const user=useAppSelector(store=>store.user.user)
+const dispatch=useAppDispatch()
 console.log(user)
   const handleLogout=()=>{
     localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    dispatch(clearUser())
     setIsAuthenticated(!isAuthenticated)
   }
-  return token ? (
+  return user ? (
     <div className="relative max-w-7xl flex mt-4 mx-auto bg-white shadow-md rounded-lg overflow-hidden">
       {/* User Image */}
       <div className="relative">

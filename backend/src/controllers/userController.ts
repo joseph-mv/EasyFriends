@@ -80,10 +80,76 @@ try{
 export const friendRequest=async (req:Request,res:Response)=>{
   const{senderId,receiverId}=req.body
  
-  const sender = await userModel.findById(senderId);
-  const receiver = await userModel.findById(receiverId);
+  try {
+    // Find both the sender and receiver from the database
+    const sender = await userModel.findById(senderId);
+    const receiver = await userModel.findById(receiverId);
 
-  console.log(senderId,receiverId)
+    // Check if both users exist
+    if (!sender || !receiver) {
+      res.status(404).json({ message: "Sender or Receiver not found" });
+      return
+    }
+
+    // Push senderId to receiver's getRequests if  not in the array
+    if(!receiver.getRequests.includes(senderId)){
+      receiver.getRequests.push(senderId);
+      await receiver.save(); // Save the updated receiver document
+    }
+   
+
+    // Push receiverId to sender's sendRequests if not in the array
+    if(!sender.sendRequests.includes(receiverId)){
+      sender.sendRequests.push(receiverId);
+    await sender.save(); // Save the updated sender document
+    }
+    
+
+    // Respond with success
+    res.status(200).json({ message: "Friend request sent successfully" ,status:true});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
+
+export const cancelRequest=async (req:Request,res:Response)=>{
+  const{senderId,receiverId}=req.body
+  console.log('sdf', senderId,receiverId)
+ 
+  try {
+    // Find both the sender and receiver from the database
+    const sender = await userModel.findById(senderId);
+    const receiver = await userModel.findById(receiverId);
+
+    // Check if both users exist
+    if (!sender || !receiver) {
+      res.status(404).json({ message: "Sender or Receiver not found" });
+      return
+    }
+
+
+    const indexToDelete1 = receiver.getRequests.indexOf(senderId);
+    console.log(indexToDelete1)
+    if (indexToDelete1 > -1) {
+      receiver.getRequests.splice(indexToDelete1, 1); // Remove 1 element at the found index
+    }
+    await receiver.save()
+
+    
+    const indexToDelete2 = sender.sendRequests.indexOf(senderId);
+    if (indexToDelete2 > -1) {
+      sender.sendRequests.splice(indexToDelete2, 1); // Remove 1 element at the found index
+    }
+    await sender.save(); 
+
+    // Respond with success
+    res.status(200).json({ message: "Cancel Friend request sent successfully" ,status:true});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 
 

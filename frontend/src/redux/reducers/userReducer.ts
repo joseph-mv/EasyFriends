@@ -20,7 +20,7 @@ interface User {
 
 // Define the initial state type
 interface UserState {
-  user: User | null; // User object or null
+  user: User | null // User object or null
   
 }
 
@@ -43,12 +43,23 @@ const userSlice = createSlice({
     clearUser: (state) => {
       state.user = null;
     },
+    sendRequest:(state,action:PayloadAction<string>)=>{
+      state.user?.sendRequests.push(action.payload)
+    },
+    cancelRequest:(state,action:PayloadAction<string>)=>{
+      const indexToDelete = state.user?.sendRequests.indexOf(action.payload);
+console.log('deleteInd' ,indexToDelete)
+      if ( indexToDelete as number > -1) {
+        state.user?.sendRequests.splice(indexToDelete, 1); // Remove 1 element at the found index
+      }
+    
+    },
     
   },
 });
 
 // Export actions
-export const { setUser, clearUser} = userSlice.actions;
+export const { setUser, clearUser,sendRequest,cancelRequest} = userSlice.actions;
 
 // Export reducer
 export default userSlice.reducer;
