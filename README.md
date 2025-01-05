@@ -1,4 +1,4 @@
-# DailyDo
+# EasyFriends
 
 EasyFriends is a social networking web application built using the MERN (MongoDB, Express.js, React, Node.js) stack. It enables users to connect with others, send friend requests, accept or decline them, and manage their friends list seamlessly.
 
