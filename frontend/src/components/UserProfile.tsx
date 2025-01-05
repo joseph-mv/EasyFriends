@@ -1,12 +1,13 @@
 import { User2Icon } from "lucide-react";
-import { FormData } from "./SignupForm/type";
+// import { FormData } from "./SignupForm/type";
 import { useState } from "react";
+import { useAppSelector } from "../redux/store";
 
 const UserProfile = () => {
 const [isAuthenticated,setIsAuthenticated]=useState(false)
   const token = localStorage.getItem("token");
-  const storedUser = localStorage.getItem("user");
-  const user: FormData &{image:string,numberOfFriends:number} = JSON.parse(storedUser as string);
+const user=useAppSelector(store=>store.user.user)
+console.log(user)
   const handleLogout=()=>{
     localStorage.removeItem('token')
     localStorage.removeItem('user')

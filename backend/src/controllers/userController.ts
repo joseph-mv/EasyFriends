@@ -17,7 +17,6 @@ export const createUser = async (req: Request, res: Response) => {
               .json({ message: "oops , The email is already used, try another" });
           } else {
             const saltRounds = 10;
-            console.log(user);
             user.password = await bcrypt.hash(user.password, saltRounds);
             user.createdAt = new Date();
             await user.save();
@@ -80,7 +79,7 @@ try{
 
 export const friendRequest=async (req:Request,res:Response)=>{
   const{senderId,receiverId}=req.body
-  // Check if a friend request already exists
+ 
   const sender = await userModel.findById(senderId);
   const receiver = await userModel.findById(receiverId);
 

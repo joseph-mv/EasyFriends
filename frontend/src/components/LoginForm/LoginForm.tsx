@@ -4,9 +4,12 @@ import { FormData } from "./type";
 import { Props } from "../SignupForm/type";
 import axios, { AxiosError } from "axios";
 import { ErrorResponse, useNavigate } from "react-router-dom";
+import { setUser } from "../../redux/reducers/userReducer";
+import { useAppDispatch } from "../../redux/store";
 
 const SignupForm = ({ setIsLogin }: Props) => {
   const navigate=useNavigate()
+  const dispatch=useAppDispatch()
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -45,7 +48,10 @@ const SignupForm = ({ setIsLogin }: Props) => {
         setStatus(response.data.msg || response.data.error);
        if(response.data.status) {
         localStorage.setItem("token",response.data.token)
-        localStorage.setItem("user",JSON.stringify(response.data.user))
+        // localStorage.setItem("user",JSON.stringify(response.data.user))
+        dispatch(setUser(response.data.user))
+       
+
         navigate('/')
        }
       } catch (error) {
