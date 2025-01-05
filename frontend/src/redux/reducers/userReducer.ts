@@ -64,13 +64,20 @@ const userSlice = createSlice({
     },
     acceptRequest:(state,action:PayloadAction<string>)=>{
       state.user?.friends.push(action.payload);
+    },
+    removeFriend:(state,action:PayloadAction<string>)=>{
+      const indexToDelete = state.user?.friends.indexOf(action.payload);
+      console.log(indexToDelete)
+      if ( indexToDelete as number > -1) {
+        state.user?.friends.splice(indexToDelete, 1); // Remove 1 element at the found index
+      }
     }
     
   },
 });
 
 // Export actions
-export const { setUser, clearUser,sendRequest,cancelRequest,declineRequest,acceptRequest} = userSlice.actions;
+export const { setUser, clearUser,sendRequest,cancelRequest,declineRequest,acceptRequest,removeFriend} = userSlice.actions;
 
 // Export reducer
 export default userSlice.reducer;

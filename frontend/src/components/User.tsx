@@ -2,7 +2,7 @@ import { User as UserDetails } from "./UsersList";
 import { Plus } from "lucide-react";
 import { axiosInstance } from "../api/axiosInstance";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { acceptRequest, cancelRequest, declineRequest, sendRequest } from "../redux/reducers/userReducer";
+import { acceptRequest, cancelRequest, declineRequest, removeFriend, sendRequest } from "../redux/reducers/userReducer";
 import { getRelationshipStatus } from "../utils";
 
 const User = ({ user }: { user: UserDetails }) => {
@@ -108,6 +108,32 @@ const User = ({ user }: { user: UserDetails }) => {
       alert(error.response?.data?.message || "Failed to cancel friend request");
     }
   };
+  const unfriend=async ()=>{
+    try {
+      const response = await axiosInstance.post(
+        "/unfriend",
+        {
+         userId: loggedUserId,
+          friendId: user._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+          },
+        }
+      );
+      console.log(response)
+      if (response.data.status) {
+
+        dispatch(removeFriend(user._id));
+       
+      }
+      alert(response.data.message);
+    } catch (error: any) {
+      console.error("Error sending friend request:", error);
+      alert(error.response?.data?.message || "Failed to cancel friend request");
+    }
+  }
 
   const relation = getRelationshipStatus(user._id, {
     friends: loggedUser?.friends,
@@ -145,7 +171,7 @@ const User = ({ user }: { user: UserDetails }) => {
   </button>
 ) : relation === "Friends" ? (
   <button
-    // onClick={unfriend}
+    onClick={unfriend}
     className="absolute right-4 px-4  py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-300"
     aria-label="Unfriend"
   >

@@ -1,4 +1,4 @@
-import { acceptRequest, cancelRequest, friendRequest, getUser } from './../controllers/userController';
+import { acceptRequest, cancelRequest, friendRequest, getUser, unFriend } from './../controllers/userController';
 import { Router } from "express";
 import { createUser, filterUsers, login } from "../controllers/userController";
 import authenticateToken from '../middleware/authenticateToken'
@@ -11,6 +11,7 @@ router.post('/friend_request',authenticateToken ,friendRequest)
 router.post('/cancel_request',authenticateToken ,cancelRequest)
 router.post('/decline_request',authenticateToken ,cancelRequest)
 router.post('/accept_request',authenticateToken ,acceptRequest)
+router.post('/unfriend',authenticateToken,unFriend)
 
 
 

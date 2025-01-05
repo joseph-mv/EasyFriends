@@ -227,4 +227,36 @@ export const acceptRequest = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};
+
+export const unFriend = async (req: Request, res: Response) => {
+  const { userId,friendId } = req.body;
+  console.log('unfriend',friendId,userId);
+
+  try {
+    const result1 = await userModel.updateOne(
+      { _id: userId },
+      { $pull: { friends:friendId } }
+    );
+    
+
+    const result2 = await userModel.updateOne(
+      { _id: friendId },
+      { $pull: { friends: userId } }
+    );
+
+    if (result1.modifiedCount > 0) {
+      res.status(200).json({
+        message: `Friend with ID removed successfully.`,
+        status: true,
+      });
+    } else {
+      console.log(`No matching friend found to remove.`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
